@@ -3,6 +3,8 @@
 #
 .DS_Store
 
+.idea   
+
 ../.idea/React-Native-Training.iml
 # Xcode
 #
