@@ -1,5 +1,6 @@
-import {FlatList, Text, TextInput, View} from 'react-native';
+import {FlatList, RefreshControl, Text, TextInput, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {usePullToRefresh} from '../hooks/usePullToRefresh';
 
 const flatListData = [
   {
@@ -28,7 +29,11 @@ const RenderItem = ({dishName, price}) => {
 export const FlastListComponent = () => {
   const [search, setSearch] = useState('');
   const [data, setData] = useState(flatListData);
-
+  const {refreshing, onRefreshHandler} = usePullToRefresh({
+    onRefreshFunction() {
+      return flatListData;
+    },
+  });
   useEffect(() => {
     const emptyText = () => {
       if (search === '') {
@@ -48,6 +53,7 @@ export const FlastListComponent = () => {
     });
     setData(newData);
   };
+
   return (
     <View>
       <TextInput
@@ -61,6 +67,12 @@ export const FlastListComponent = () => {
         renderItem={({item}) => (
           <RenderItem dishName={item.dishName} price={item.price} />
         )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshHandler}
+          />
+        }
       />
     </View>
   );

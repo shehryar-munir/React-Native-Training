@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {SectionList, Text, TextInput, View} from 'react-native';
+import {RefreshControl, SectionList, Text, TextInput, View} from 'react-native';
+import {usePullToRefresh} from '../hooks/usePullToRefresh';
 
 const sectionListData = [
   {
@@ -19,7 +20,11 @@ const sectionListData = [
 export const SectionListComponent = () => {
   const [search, setSearch] = useState('');
   const [data, setData] = useState(sectionListData);
-
+  const {refreshing, onRefreshHandler} = usePullToRefresh({
+    onRefreshFunction() {
+      return sectionListData;
+    },
+  });
   useEffect(() => {
     if (search === '') {
       setData(sectionListData);
@@ -51,6 +56,12 @@ export const SectionListComponent = () => {
           </View>
         )}
         renderSectionHeader={({section: {title}}) => <Text>{title} </Text>}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefreshHandler}
+          />
+        }
       />
     </View>
   );
